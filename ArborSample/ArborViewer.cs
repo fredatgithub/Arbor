@@ -114,7 +114,7 @@ namespace ArborSample
 
             // repulsion - отталкивание, stiffness - тугоподвижность, friction - сила трения
             fSys = new ArborSystemEx(10000, 500/*1000*/, 0.1, this);
-            fSys.setScreenSize(Width, Height);
+            fSys.SetScreenSize(Width, Height);
             fSys.AutoStop = false;
 
             fEnergyDebug = false;
@@ -147,7 +147,7 @@ namespace ArborSample
         {
             base.OnResize(e);
 
-            fSys.setScreenSize(Width, Height);
+            fSys.SetScreenSize(Width, Height);
             Invalidate();
         }
 
@@ -178,13 +178,13 @@ namespace ArborSample
                         var srcNode = edge.Source as ArborNodeEx;
                         var tgtNode = edge.Target as ArborNodeEx;
 
-                        ArborPoint pt1 = fSys.toScreen(srcNode.Pt);
-                        ArborPoint pt2 = fSys.toScreen(tgtNode.Pt);
+                        ArborPoint pt1 = fSys.ToScreen(srcNode.Pt);
+                        ArborPoint pt2 = fSys.ToScreen(tgtNode.Pt);
 
                         ArborPoint tail = intersect_line_box(pt1, pt2, srcNode.Box);
-                        ArborPoint head = (tail.isNull()) ? ArborPoint.Null : intersect_line_box(tail, pt2, tgtNode.Box);
+                        ArborPoint head = (tail.IsNull()) ? ArborPoint.Null : intersect_line_box(tail, pt2, tgtNode.Box);
 
-                        if (!head.isNull() && !tail.isNull())
+                        if (!head.IsNull() && !tail.IsNull())
                         {
                             gfx.DrawLine(grayPen, (int)tail.X, (int)tail.Y, (int)head.X, (int)head.Y);
                         }
@@ -231,23 +231,23 @@ namespace ArborSample
             ArborPoint pt;
 
             pt = intersect_line_line(p1, p2, tl, tr);
-            if (!pt.isNull()) return pt;
+            if (!pt.IsNull()) return pt;
 
             pt = intersect_line_line(p1, p2, tr, br);
-            if (!pt.isNull()) return pt;
+            if (!pt.IsNull()) return pt;
 
             pt = intersect_line_line(p1, p2, br, bl);
-            if (!pt.isNull()) return pt;
+            if (!pt.IsNull()) return pt;
 
             pt = intersect_line_line(p1, p2, bl, tl);
-            if (!pt.isNull()) return pt;
+            if (!pt.IsNull()) return pt;
 
             return ArborPoint.Null;
         }
 
         public void start()
         {
-            fSys.start();
+            fSys.Start();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -257,7 +257,7 @@ namespace ArborSample
 
             if (fNodesDragging)
             {
-                fDragged = fSys.nearest(e.X, e.Y);
+                fDragged = fSys.Nearest(e.X, e.Y);
 
                 if (fDragged != null)
                 {
@@ -284,7 +284,7 @@ namespace ArborSample
 
             if (fNodesDragging && fDragged != null)
             {
-                fDragged.Pt = fSys.fromScreen(e.X, e.Y);
+                fDragged.Pt = fSys.FromScreen(e.X, e.Y);
             }
         }
 
@@ -293,7 +293,7 @@ namespace ArborSample
             SizeF tsz = gfx.MeasureString(node.Sign, fDrawFont);
             float w = tsz.Width + 10;
             float h = tsz.Height + 4;
-            ArborPoint pt = fSys.toScreen(node.Pt);
+            ArborPoint pt = fSys.ToScreen(node.Pt);
             pt.X = Math.Floor(pt.X);
             pt.Y = Math.Floor(pt.Y);
 
@@ -302,7 +302,7 @@ namespace ArborSample
 
         public ArborNode getNodeByCoord(int x, int y)
         {
-            return fSys.nearest(x, y);
+            return fSys.Nearest(x, y);
 
             /*foreach (ArborNode node in fSys.Nodes)
             {
@@ -315,43 +315,43 @@ namespace ArborSample
 
         public void doSample()
         {
-            fSys.addNode("1")/*.Mass = 50*/;
+            fSys.AddNode("1")/*.Mass = 50*/;
 
-            fSys.addEdge("1", "4"/*, 10*/);
-            fSys.addEdge("1", "12"/*, 10*/);
-            fSys.addEdge("4", "21");
-            fSys.addEdge("4", "23"/*, 20*/);
-            fSys.addEdge("7", "34");
-            fSys.addEdge("7", "13");
-            fSys.addEdge("7", "44");
-            fSys.addEdge("12", "25");
-            fSys.addEdge("12", "24");
-            fSys.addEdge("23", "50");
-            fSys.addEdge("23", "53");
-            fSys.addEdge("24", "6");
-            fSys.addEdge("24", "42"/*, 20*/);
-            fSys.addEdge("25", "94");
-            fSys.addEdge("25", "66");
-            fSys.addEdge("32", "47");
-            fSys.addEdge("32", "84");
-            fSys.addEdge("42", "32");
-            fSys.addEdge("42", "7");
-            fSys.addEdge("50", "72");
-            fSys.addEdge("50", "65");
-            fSys.addEdge("53", "67");
-            fSys.addEdge("53", "68");
-            fSys.addEdge("66", "79");
-            fSys.addEdge("66", "80");
-            fSys.addEdge("67", "88");
-            fSys.addEdge("67", "83");
-            fSys.addEdge("68", "77");
-            fSys.addEdge("68", "91");
-            fSys.addEdge("80", "99");
-            fSys.addEdge("80", "97");
-            fSys.addEdge("88", "110");
-            fSys.addEdge("88", "104");
-            fSys.addEdge("91", "106");
-            fSys.addEdge("91", "100");
+            fSys.AddEdge("1", "4"/*, 10*/);
+            fSys.AddEdge("1", "12"/*, 10*/);
+            fSys.AddEdge("4", "21");
+            fSys.AddEdge("4", "23"/*, 20*/);
+            fSys.AddEdge("7", "34");
+            fSys.AddEdge("7", "13");
+            fSys.AddEdge("7", "44");
+            fSys.AddEdge("12", "25");
+            fSys.AddEdge("12", "24");
+            fSys.AddEdge("23", "50");
+            fSys.AddEdge("23", "53");
+            fSys.AddEdge("24", "6");
+            fSys.AddEdge("24", "42"/*, 20*/);
+            fSys.AddEdge("25", "94");
+            fSys.AddEdge("25", "66");
+            fSys.AddEdge("32", "47");
+            fSys.AddEdge("32", "84");
+            fSys.AddEdge("42", "32");
+            fSys.AddEdge("42", "7");
+            fSys.AddEdge("50", "72");
+            fSys.AddEdge("50", "65");
+            fSys.AddEdge("53", "67");
+            fSys.AddEdge("53", "68");
+            fSys.AddEdge("66", "79");
+            fSys.AddEdge("66", "80");
+            fSys.AddEdge("67", "88");
+            fSys.AddEdge("67", "83");
+            fSys.AddEdge("68", "77");
+            fSys.AddEdge("68", "91");
+            fSys.AddEdge("80", "99");
+            fSys.AddEdge("80", "97");
+            fSys.AddEdge("88", "110");
+            fSys.AddEdge("88", "104");
+            fSys.AddEdge("91", "106");
+            fSys.AddEdge("91", "100");
         }
     }
 }

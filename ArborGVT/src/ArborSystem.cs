@@ -141,7 +141,7 @@ namespace ArborGVT
     {
       if (!fDisposed)
       {
-        stop();
+        Stop();
         fDisposed = true;
       }
     }
@@ -150,7 +150,7 @@ namespace ArborGVT
 
     protected abstract void StopTimer();
 
-    public void start()
+    public void Start()
     {
       if (fOnStart != null) fOnStart(this, new EventArgs());
 
@@ -165,11 +165,11 @@ namespace ArborGVT
       StartTimer();
     }
 
-    public void stop()
+    public void Stop()
     {
       StopTimer();
-
-      if (fOnStop != null) fOnStop(this, new EventArgs());
+      //if (fOnStop != null) fOnStop(this, new EventArgs());
+      fOnStop?.Invoke(this, new EventArgs());
     }
 
     protected virtual ArborNode CreateNode(string sign)
@@ -182,7 +182,7 @@ namespace ArborGVT
       return new ArborEdge(src, tgt, len, stiffness, directed);
     }
 
-    public ArborNode addNode(string sign, double x, double y)
+    public ArborNode AddNode(string sign, double x, double y)
     {
       ArborNode node = getNode(sign);
       if (node != null) return node;
@@ -196,14 +196,14 @@ namespace ArborGVT
       return node;
     }
 
-    public ArborNode addNode(string sign)
+    public ArborNode AddNode(string sign)
     {
       ArborPoint lt = fGraphBounds.LeftTop;
       ArborPoint rb = fGraphBounds.RightBottom;
       double xx = lt.X + (rb.X - lt.X) * ArborSystem.NextRndDouble();
       double yy = lt.Y + (rb.Y - lt.Y) * ArborSystem.NextRndDouble();
 
-      return addNode(sign, xx, yy);
+      return AddNode(sign, xx, yy);
     }
 
     public ArborNode getNode(string sign)
@@ -211,13 +211,13 @@ namespace ArborGVT
       return (ArborNode)fNames[sign];
     }
 
-    public ArborEdge addEdge(string srcSign, string tgtSign, double len = 1.0)
+    public ArborEdge AddEdge(string srcSign, string tgtSign, double len = 1.0)
     {
       ArborNode src = getNode(srcSign);
-      src = (src != null) ? src : addNode(srcSign);
+      src = (src != null) ? src : AddNode(srcSign);
 
       ArborNode tgt = getNode(tgtSign);
-      tgt = (tgt != null) ? tgt : addNode(tgtSign);
+      tgt = (tgt != null) ? tgt : AddNode(tgtSign);
 
       ArborEdge x = null;
       if (src != null && tgt != null)
@@ -241,36 +241,36 @@ namespace ArborGVT
       return x;
     }
 
-    public void setScreenSize(int width, int height)
+    public void SetScreenSize(int width, int height)
     {
       fScreenWidth = width;
       fScreenHeight = height;
-      updateViewBounds();
+      UpdateViewBounds();
     }
 
-    public ArborPoint toScreen(ArborPoint pt)
+    public ArborPoint ToScreen(ArborPoint pt)
     {
       if (fViewBounds == null) return ArborPoint.Null;
 
-      ArborPoint vd = fViewBounds.RightBottom.sub(fViewBounds.LeftTop);
-      double sx = margins[3] + pt.sub(fViewBounds.LeftTop).div(vd.X).X * (fScreenWidth - (margins[1] + margins[3]));
-      double sy = margins[0] + pt.sub(fViewBounds.LeftTop).div(vd.Y).Y * (fScreenHeight - (margins[0] + margins[2]));
+      ArborPoint vd = fViewBounds.RightBottom.Sub(fViewBounds.LeftTop);
+      double sx = margins[3] + pt.Sub(fViewBounds.LeftTop).Div(vd.X).X * (fScreenWidth - (margins[1] + margins[3]));
+      double sy = margins[0] + pt.Sub(fViewBounds.LeftTop).Div(vd.Y).Y * (fScreenHeight - (margins[0] + margins[2]));
       return new ArborPoint(sx, sy);
     }
 
-    public ArborPoint fromScreen(double sx, double sy)
+    public ArborPoint FromScreen(double sx, double sy)
     {
       if (fViewBounds == null) return ArborPoint.Null;
 
-      ArborPoint vd = fViewBounds.RightBottom.sub(fViewBounds.LeftTop);
+      ArborPoint vd = fViewBounds.RightBottom.Sub(fViewBounds.LeftTop);
       double x = (sx - margins[3]) / (fScreenWidth - (margins[1] + margins[3])) * vd.X + fViewBounds.LeftTop.X;
       double y = (sy - margins[0]) / (fScreenHeight - (margins[0] + margins[2])) * vd.Y + fViewBounds.LeftTop.Y;
       return new ArborPoint(x, y);
     }
 
-    public ArborNode nearest(int sx, int sy)
+    public ArborNode Nearest(int sx, int sy)
     {
-      ArborPoint x = fromScreen(sx, sy);
+      ArborPoint x = FromScreen(sx, sy);
 
       ArborNode resNode = null;
       double minDist = +1.0;
@@ -278,12 +278,12 @@ namespace ArborGVT
       foreach (ArborNode node in fNodes)
       {
         ArborPoint z = node.Pt;
-        if (z.exploded())
+        if (z.Exploded())
         {
           continue;
         }
 
-        double dist = z.sub(x).magnitude();
+        double dist = z.Sub(x).Magnitude();
         if (dist < minDist)
         {
           resNode = node;
@@ -295,7 +295,7 @@ namespace ArborGVT
       return resNode;
     }
 
-    private void updateGraphBounds()
+    private void UpdateGraphBounds()
     {
       ArborPoint lt = new ArborPoint(-1, -1);
       ArborPoint rb = new ArborPoint(1, 1);
@@ -303,7 +303,7 @@ namespace ArborGVT
       foreach (ArborNode node in fNodes)
       {
         ArborPoint pt = node.Pt;
-        if (pt.exploded()) continue;
+        if (pt.Exploded()) continue;
 
         if (pt.X < lt.X) lt.X = pt.X;
         if (pt.Y < lt.Y) lt.Y = pt.Y;
@@ -316,18 +316,18 @@ namespace ArborGVT
       rb.X += 1.2;
       rb.Y += 1.2;
 
-      ArborPoint sz = rb.sub(lt);
-      ArborPoint cent = lt.add(sz.div(2));
-      ArborPoint d = new ArborPoint(Math.Max(sz.X, 4.0), Math.Max(sz.Y, 4.0)).div(2);
+      ArborPoint sz = rb.Sub(lt);
+      ArborPoint cent = lt.Add(sz.Div(2));
+      ArborPoint d = new ArborPoint(Math.Max(sz.X, 4.0), Math.Max(sz.Y, 4.0)).Div(2);
 
-      fGraphBounds = new PSBounds(cent.sub(d), cent.add(d));
+      fGraphBounds = new PSBounds(cent.Sub(d), cent.Add(d));
     }
 
-    private void updateViewBounds()
+    private void UpdateViewBounds()
     {
       try
       {
-        updateGraphBounds();
+        UpdateGraphBounds();
 
         if (fViewBounds == null)
         {
@@ -335,23 +335,23 @@ namespace ArborGVT
           return;
         }
 
-        ArborPoint vLT = fGraphBounds.LeftTop.sub(fViewBounds.LeftTop).mul(Mag);
-        ArborPoint vRB = fGraphBounds.RightBottom.sub(fViewBounds.RightBottom).mul(Mag);
+        ArborPoint vLT = fGraphBounds.LeftTop.Sub(fViewBounds.LeftTop).Mul(Mag);
+        ArborPoint vRB = fGraphBounds.RightBottom.Sub(fViewBounds.RightBottom).Mul(Mag);
 
-        double aX = vLT.magnitude() * fScreenWidth;
-        double aY = vRB.magnitude() * fScreenHeight;
+        double aX = vLT.Magnitude() * fScreenWidth;
+        double aY = vRB.Magnitude() * fScreenHeight;
 
         if (aX > 1 || aY > 1)
         {
-          ArborPoint nbLT = fViewBounds.LeftTop.add(vLT);
-          ArborPoint nbRB = fViewBounds.RightBottom.add(vRB);
+          ArborPoint nbLT = fViewBounds.LeftTop.Add(vLT);
+          ArborPoint nbRB = fViewBounds.RightBottom.Add(vRB);
 
           fViewBounds = new PSBounds(nbLT, nbRB);
         }
       }
-      catch (Exception ex)
+      catch (Exception exception)
       {
-        Debug.WriteLine("ArborSystem.updateViewBounds(): " + ex.Message);
+        Debug.WriteLine("ArborSystem.updateViewBounds(): " + exception.Message);
       }
     }
 
@@ -373,8 +373,8 @@ namespace ArborGVT
       fBusy = true;
       try
       {
-        updatePhysics();
-        updateViewBounds();
+        UpdatePhysics();
+        UpdateViewBounds();
 
         if (fRenderer != null)
         {
@@ -392,7 +392,7 @@ namespace ArborGVT
             TimeSpan ts = DateTime.Now - fPrevTime;
             if (ts.TotalMilliseconds > 1000)
             {
-              stop();
+              Stop();
             }
           }
           else
@@ -408,7 +408,7 @@ namespace ArborGVT
       fBusy = false;
     }
 
-    private void updatePhysics()
+    private void UpdatePhysics()
     {
       try
       {
@@ -421,54 +421,54 @@ namespace ArborGVT
 
         if (ParamStiffness > 0)
         {
-          applySprings();
+          ApplySprings();
         }
 
         // euler integrator
         if (ParamRepulsion > 0)
         {
-          applyBarnesHutRepulsion();
+          ApplyBarnesHutRepulsion();
         }
 
-        updateVelocityAndPosition(ParamDt);
+        UpdateVelocityAndPosition(ParamDt);
       }
-      catch (Exception ex)
+      catch (Exception exception)
       {
-        Debug.WriteLine("ArborSystem.updatePhysics(): " + ex.Message);
+        Debug.WriteLine("ArborSystem.updatePhysics(): " + exception.Message);
       }
     }
 
-    private void applyBarnesHutRepulsion()
+    private void ApplyBarnesHutRepulsion()
     {
       BarnesHutTree bht = new BarnesHutTree(fGraphBounds.LeftTop, fGraphBounds.RightBottom, ParamTheta);
 
       foreach (ArborNode node in fNodes)
       {
-        bht.insert(node);
+        bht.Insert(node);
       }
 
       foreach (ArborNode node in fNodes)
       {
-        bht.applyForces(node, ParamRepulsion);
+        bht.ApplyForces(node, ParamRepulsion);
       }
     }
 
-    private void applySprings()
+    private void ApplySprings()
     {
       foreach (ArborEdge edge in fEdges)
       {
-        ArborPoint s = edge.Target.Pt.sub(edge.Source.Pt);
-        double sMag = s.magnitude();
+        ArborPoint s = edge.Target.Pt.Sub(edge.Source.Pt);
+        double sMag = s.Magnitude();
 
-        ArborPoint r = ((sMag > 0) ? s : ArborPoint.newRnd(1)).normalize();
+        ArborPoint r = ((sMag > 0) ? s : ArborPoint.NewRnd(1)).Normalize();
         double q = edge.Stiffness * (edge.Length - sMag);
 
-        edge.Source.applyForce(r.mul(q * -0.5));
-        edge.Target.applyForce(r.mul(q * 0.5));
+        edge.Source.ApplyForce(r.Mul(q * -0.5));
+        edge.Target.ApplyForce(r.Mul(q * 0.5));
       }
     }
 
-    private void updateVelocityAndPosition(double dt)
+    private void UpdateVelocityAndPosition(double dt)
     {
       int size = fNodes.Count;
       if (size == 0)
@@ -486,21 +486,21 @@ namespace ArborGVT
       ArborPoint rr = new ArborPoint(0, 0);
       foreach (ArborNode node in fNodes)
       {
-        rr = rr.sub(node.Pt);
+        rr = rr.Sub(node.Pt);
       }
-      ArborPoint drift = rr.div(size);
+      ArborPoint drift = rr.Div(size);
 
       // main updates loop
       foreach (ArborNode node in fNodes)
       {
         // apply center drift
-        node.applyForce(drift);
+        node.ApplyForce(drift);
 
         // apply center gravity
         if (ParamGravity)
         {
-          ArborPoint q = node.Pt.mul(-1);
-          node.applyForce(q.mul(ParamRepulsion / 100));
+          ArborPoint q = node.Pt.Mul(-1);
+          node.ApplyForce(q.Mul(ParamRepulsion / 100));
         }
 
         // update velocities
@@ -510,23 +510,23 @@ namespace ArborGVT
         }
         else
         {
-          node.V = node.V.add(node.F.mul(dt));
-          node.V = node.V.mul(1 - ParamFriction);
+          node.V = node.V.Add(node.F.Mul(dt));
+          node.V = node.V.Mul(1 - ParamFriction);
 
-          double r = node.V.magnitudeSquare();
+          double r = node.V.MagnitudeSquare();
           if (r > 1000000)
           {
-            node.V = node.V.div(r);
+            node.V = node.V.Div(r);
           }
         }
 
         node.F.X = node.F.Y = 0;
 
         // update positions
-        node.Pt = node.Pt.add(node.V.mul(dt));
+        node.Pt = node.Pt.Add(node.V.Mul(dt));
 
         // update energy
-        double z = node.V.magnitudeSquare();
+        double z = node.V.MagnitudeSquare();
         eSum += z;
         eMax = Math.Max(z, eMax);
       }

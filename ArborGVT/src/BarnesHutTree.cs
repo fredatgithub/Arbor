@@ -45,19 +45,21 @@ namespace ArborGVT
     public BarnesHutTree(ArborPoint origin, ArborPoint h, double dist)
     {
       fDist = dist * dist;
-      fRoot = new Branch(origin, h.sub(origin));
+      fRoot = new Branch(origin, h.Sub(origin));
     }
 
     private static int getQuad(ArborNode i, Branch f)
     {
       try
       {
-        if (i.Pt.exploded())
+        if (i.Pt.Exploded())
         {
           return QNone;
         }
-        ArborPoint h = i.Pt.sub(f.Origin);
-        ArborPoint g = f.Size.div(2);
+
+        ArborPoint h = i.Pt.Sub(f.Origin);
+        ArborPoint g = f.Size.Div(2);
+
         if (h.Y < g.Y)
         {
           return (h.X < g.X) ? QNw : QNe;
@@ -67,14 +69,14 @@ namespace ArborGVT
           return (h.X < g.X) ? QSw : QSe;
         }
       }
-      catch (Exception ex)
+      catch (Exception exception)
       {
-        Debug.WriteLine("BarnesHutTree.getQuad(): " + ex.Message);
+        Debug.WriteLine("BarnesHutTree.getQuad(): " + exception.Message);
         return QNone;
       }
     }
 
-    public void insert(ArborNode j)
+    public void Insert(ArborNode j)
     {
       try
       {
@@ -95,14 +97,14 @@ namespace ArborGVT
             f.Q[qd] = h;
 
             f.Mass += m;
-            f.Pt = f.Pt.add(h.Pt.mul(m));
+            f.Pt = f.Pt.Add(h.Pt.Mul(m));
           }
           else
           {
             if (fp is Branch)
             {
               f.Mass += m;
-              f.Pt = f.Pt.add(h.Pt.mul(m));
+              f.Pt = f.Pt.Add(h.Pt.Mul(m));
 
               f = fp as Branch;
 
@@ -110,7 +112,7 @@ namespace ArborGVT
             }
             else
             {
-              ArborPoint l = f.Size.div(2);
+              ArborPoint l = f.Size.Div(2);
               ArborPoint n = new ArborPoint(f.Origin.X, f.Origin.Y);
 
               if (qd == QSe || qd == QSw)
@@ -127,7 +129,7 @@ namespace ArborGVT
               f.Q[qd] = fp;
 
               f.Mass = m;
-              f.Pt = h.Pt.mul(m);
+              f.Pt = h.Pt.Mul(m);
 
               f = fp as Branch;
 
@@ -145,13 +147,13 @@ namespace ArborGVT
           }
         }
       }
-      catch (Exception ex)
+      catch (Exception exception)
       {
-        Debug.WriteLine("BarnesHutTree.insert(): " + ex.Message);
+        Debug.WriteLine("BarnesHutTree.insert(): " + exception.Message);
       }
     }
 
-    public void applyForces(ArborNode m, double g)
+    public void ApplyForces(ArborNode m, double g)
     {
       try
       {
@@ -172,21 +174,21 @@ namespace ArborGVT
             massx = node.Mass;
             ptx = node.Pt;
 
-            k = m.Pt.sub(ptx);
-            kMag = k.magnitudeSquare();
+            k = m.Pt.Sub(ptx);
+            kMag = k.MagnitudeSquare();
 
-            i = ((kMag > 0) ? k : ArborPoint.newRnd(1)).normalize();
+            i = ((kMag > 0) ? k : ArborPoint.NewRnd(1)).Normalize();
             l = Math.Max(1, kMag);
-            m.applyForce(i.mul(g * massx).div(l));
+            m.ApplyForce(i.Mul(g * massx).Div(l));
           }
           else
           {
             Branch branch = (obj as Branch);
             massx = branch.Mass;
-            ptx = branch.Pt.div(massx);
+            ptx = branch.Pt.Div(massx);
 
-            k = m.Pt.sub(ptx);
-            kMag = k.magnitudeSquare();
+            k = m.Pt.Sub(ptx);
+            kMag = k.MagnitudeSquare();
 
             double h = branch.Size.X * branch.Size.Y;
             if (h / kMag > fDist)
@@ -198,16 +200,16 @@ namespace ArborGVT
             }
             else
             {
-              i = ((kMag > 0) ? k : ArborPoint.newRnd(1)).normalize();
+              i = ((kMag > 0) ? k : ArborPoint.NewRnd(1)).Normalize();
               l = Math.Max(1, kMag);
-              m.applyForce(i.mul(g * massx).div(l));
+              m.ApplyForce(i.Mul(g * massx).Div(l));
             }
           }
         }
       }
-      catch (Exception ex)
+      catch (Exception exception)
       {
-        Debug.WriteLine("BarnesHutTree.applyForces(): " + ex.Message);
+        Debug.WriteLine("BarnesHutTree.applyForces(): " + exception.Message);
       }
     }
   }

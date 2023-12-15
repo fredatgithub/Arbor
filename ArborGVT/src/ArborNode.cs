@@ -33,9 +33,9 @@ namespace ArborGVT
       F = new ArborPoint(0, 0);
     }
 
-    internal void applyForce(ArborPoint a)
+    internal void ApplyForce(ArborPoint a)
     {
-      F = F.add(a.div(Mass));
+      F = F.Add(a.Div(Mass));
     }
   }
 }
