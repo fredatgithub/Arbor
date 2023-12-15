@@ -12,3 +12,4 @@ Forked and creation of a release created by Freddy Juhel on the 16th of December
 
 Here is a sample demo:
 
+https://github.com/fredatgithub/Arbor/blob/master/arbor-app-sample-demo.png
