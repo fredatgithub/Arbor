@@ -12,7 +12,7 @@ namespace ArborSample
     /// Program entry point.
     /// </summary>
     [STAThread]
-    private static void Main(string[] args)
+    private static void Main()
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
