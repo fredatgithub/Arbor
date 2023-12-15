@@ -9,8 +9,8 @@
 
 namespace ArborGVT
 {
-    public interface IArborRenderer
-    {
-        void Invalidate();
-    }
+  public interface IArborRenderer
+  {
+    void Invalidate();
+  }
 }
