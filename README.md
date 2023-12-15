@@ -12,9 +12,6 @@ Forked and creation of a release created by Freddy Juhel on the 16th of December
 
 Here is a sample demo:
 
-![family.jpg example](
-https://github.com/fredatgithub/FamilyShow/blob/master/family.jpg)
-
 ![arbor-app-sample-demo.png example](
 https://github.com/fredatgithub/Arbor/blob/master/arbor-app-sample-demo.png)
 
